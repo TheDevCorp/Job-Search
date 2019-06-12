@@ -15,7 +15,7 @@ function PageContent(props) {
                 <p className='m-0'>Location : {job.location}</p>
             </div>
             <div className='card-footer footer text-muted flex-row row justify-content-between p-2 m-0' >
-                <p className='m-0 ml-3'>{job.created_at.toLocaleString()}</p>
+                <p className='m-0 ml-3'>{job.created_at}</p>
                 <a href={job.url}><p className='m-0 mr-3'>Details</p></a>
             </div>
         </div>

@@ -16,8 +16,8 @@ class App extends React.Component{
       jobs : [],
       tech : '',
       location : '',
-      spinner : false,
-      spinnerDisp : ''
+      spinnerDisp : '',
+      page: 0
     }
   }
   getTechType = (event) => {
@@ -36,9 +36,10 @@ class App extends React.Component{
       alert('Please Fill the required fields.');
     }else{
       this.setState({
-        spinnerDisp: <div className='loader'></div>
+        spinnerDisp: <div className='loader'></div>,
+        page: 1
       })
-      axios.get(`https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json?description=${this.state.tech}&location=${this.state.location}`)
+      axios.get(`https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json?description=${this.state.tech}&location=${this.state.location}&page=${this.state.page}`)
       .then(res => {
         this.setState({
           spinnerDisp: ''
@@ -48,13 +49,63 @@ class App extends React.Component{
           alert('No Jobs Found !!')
         }else{
           this.setState({
-            jobs : res.data,
+            jobs : res.data
           })
         }
       })
     }
   }
+  nextPage = () =>{
+    this.setState({
+      jobs: [],
+      spinnerDisp: <div className='loader'></div>,
+      page: this.state.page + 1
+    })
+    axios.get(`https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json?description=${this.state.tech}&location=${this.state.location}&page=${this.state.page}`)
+      .then(res => {
+        this.setState({
+          spinnerDisp: ''
+        })
+        if(res.data.length === 0)
+        {
+          alert('No Jobs Found !!')
+          this.setState({
+            page: 0
+          })
+        }else{
+          this.setState({
+            jobs : res.data
+          })
+        }
+      })
+  }
+  prevPage = () =>{
+    this.setState({
+      jobs: [],
+      spinnerDisp: <div className='loader'></div>,
+      page: this.state.page - 1
+    })
+    axios.get(`https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json?description=${this.state.tech}&location=${this.state.location}&page=${this.state.page}`)
+      .then(res => {
+        this.setState({
+          spinnerDisp: ''
+        })
+        if(res.data.length === 0)
+        {
+          alert('No Jobs Found !!')
+        }else{
+          this.setState({
+            jobs : res.data
+          })
+        }
+      })
+  }
   render(){
+    let page = (this.state.page === 0) ? '' : <div className='row flex-row justify-content-center'>
+    <button className='btn btn-outline-dark mx-3 btn-page' onClick={this.prevPage}>Prev</button>
+    <h5 className='my-2'>{this.state.page}</h5>
+    <button className='btn btn-outline-dark mx-3 btn-page' onClick={this.nextPage}>Next</button>
+  </div>
     return (
       <div>
         <Layout fixedHeader>
@@ -63,7 +114,7 @@ class App extends React.Component{
             <Drawer title="About Me">
                 <Navigation>
                     <a href="https://ritvikjain.me" target='_blank'>My Portfolio</a>
-                    <a href="https://www.google.com">Github</a>
+                    <a href="https://www.github.com/Ritvikjain">Github</a>
                     <a href="https://www.google.com">Linkdin</a>
                     <a href="https://www.google.com">Facebook</a>
                 </Navigation>
@@ -72,6 +123,7 @@ class App extends React.Component{
               <Search searchData = {this.searchData} getTechType={this.getTechType} getLocation={this.getLocation}></Search>
               <div className='row justify-content-center flex-row p-3'>{this.state.spinnerDisp}</div>
               <PageContent jobs={this.state.jobs}></PageContent>
+              {page}
             </Content>
         </Layout>
       </div>
