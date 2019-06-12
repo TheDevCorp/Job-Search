@@ -4,7 +4,7 @@ import './PageComponent.css'
 function PageContent(props) {
     const jobs = props.jobs;
     const jobList = jobs.map(job => 
-        <div key={job.id} className='card col-5 flex-row row p-0 m-2 mt-3'>
+        <div key={job.id} className='card col-5 flex-row row p-0 m-2 mt-3 card-css'>
             <div className='col-3 pt-3 p-3'>
                 <img src={job.company_logo} className='company-logo' alt=''></img>
             </div>

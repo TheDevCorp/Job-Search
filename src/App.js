@@ -4,14 +4,20 @@ import {Layout,Header,Navigation,Drawer,Content} from '../node_modules/react-mdl
 import axios from 'axios';
 import PageContent from './components/PageContent';
 import Search from './components/Search';
+import './components/style.css';
 
 class App extends React.Component{
   constructor()
   {
     super();
+    
+    
     this.state = {
       jobs : [],
-      tech : ''
+      tech : '',
+      location : '',
+      spinner : false,
+      spinnerDisp : ''
     }
   }
   getTechType = (event) => {
@@ -19,20 +25,40 @@ class App extends React.Component{
       tech: event.target.value
     })
   }
-  searchData = () => {
-    axios.get(`https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json?search=${this.state.tech}`)
-    .then(res => {
-      this.setState({
-        jobs : res.data
-      })
-      // console.log(res.data)
+  getLocation = (event) => {
+    this.setState({
+      location: event.target.value
     })
+  }
+  searchData = () => {
+    if(this.state.tech === '' && this.state.location === '')
+    {
+      alert('Please Fill the required fields.');
+    }else{
+      this.setState({
+        spinnerDisp: <div className='loader'></div>
+      })
+      axios.get(`https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json?description=${this.state.tech}&location=${this.state.location}`)
+      .then(res => {
+        this.setState({
+          spinnerDisp: ''
+        })
+        if(res.data.length === 0)
+        {
+          alert('No Jobs Found !!')
+        }else{
+          this.setState({
+            jobs : res.data,
+          })
+        }
+      })
+    }
   }
   render(){
     return (
       <div>
         <Layout fixedHeader>
-            <Header title={<span><span style={ {color: '#ddd' }}>Job Search</span></span>}>
+            <Header  className='header' title={<span><span style={ {color: '#ddd' }}>Job Search</span></span>}>
             </Header>
             <Drawer title="About Me">
                 <Navigation>
@@ -42,8 +68,9 @@ class App extends React.Component{
                     <a href="https://www.google.com">Facebook</a>
                 </Navigation>
             </Drawer>
-            <Content> 
-              <Search searchData = {this.searchData} getTechType={this.getTechType}></Search>
+            <Content className='content'> 
+              <Search searchData = {this.searchData} getTechType={this.getTechType} getLocation={this.getLocation}></Search>
+              <div className='row justify-content-center flex-row p-3'>{this.state.spinnerDisp}</div>
               <PageContent jobs={this.state.jobs}></PageContent>
             </Content>
         </Layout>
