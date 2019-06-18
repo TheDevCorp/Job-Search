@@ -5,7 +5,7 @@
     background-color: rgba(212, 212, 212, 0.664);
 }
 .loader {
-    border: 7px solid #f3f3f3; /* Light grey */
+    border: 7px solid rgba(255, 255, 255, 0.5); /* Light grey */
     border-top: 7px solid #3498db; /* Blue */
     border-radius: 50%;
     width: 60px;

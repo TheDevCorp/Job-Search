@@ -93,6 +93,9 @@ class App extends React.Component{
         if(res.data.length === 0)
         {
           alert('No Jobs Found !!')
+          this.setState({
+            page: 0
+          })
         }else{
           this.setState({
             jobs : res.data
@@ -101,7 +104,7 @@ class App extends React.Component{
       })
   }
   render(){
-    let page = (this.state.page === 0) ? '' : <div className='row flex-row justify-content-center'>
+    let page = (this.state.page === 0) ? '' : <div className='row flex-row justify-content-center p-3'>
     <button className='btn btn-outline-dark mx-3 btn-page' onClick={this.prevPage}>Prev</button>
     <h5 className='my-2'>{this.state.page}</h5>
     <button className='btn btn-outline-dark mx-3 btn-page' onClick={this.nextPage}>Next</button>
@@ -115,14 +118,14 @@ class App extends React.Component{
                 <Navigation>
                     <a href="https://ritvikjain.me" target='_blank'>My Portfolio</a>
                     <a href="https://www.github.com/Ritvikjain">Github</a>
-                    <a href="https://www.google.com">Linkdin</a>
-                    <a href="https://www.google.com">Facebook</a>
+                    <a href="https://www.linkedin.com/in/ritvik-jain-a98a03152/">Linkdin</a>
+                    <a href="https://www.facebook.com/ritvik.jain.1232">Facebook</a>
                 </Navigation>
             </Drawer>
             <Content className='content'> 
               <Search searchData = {this.searchData} getTechType={this.getTechType} getLocation={this.getLocation}></Search>
               <div className='row justify-content-center flex-row p-3'>{this.state.spinnerDisp}</div>
-              <PageContent jobs={this.state.jobs}></PageContent>
+              <PageContent jobs={this.state.jobs} openModal={this.openModal}></PageContent>
               {page}
             </Content>
         </Layout>

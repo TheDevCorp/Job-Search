@@ -1,6 +1,5 @@
-import React from 'react'
-import './PageComponent.css'
-// import {Card,CardTitle,CardText,CardActions,Button} from 'react-mdl';
+import React from 'react';
+import './PageComponent.css';
 function PageContent(props) {
     const jobs = props.jobs;
     const jobList = jobs.map(job => 
